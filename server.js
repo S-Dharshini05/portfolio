@@ -11,7 +11,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// serve static files
+// serve static files (VERY IMPORTANT)
 app.use(express.static(path.join(__dirname, "public")));
 
 // database connection
@@ -37,22 +37,18 @@ db.connect((err) => {
   }
 });
 
-// root route (loads your website)
+// root route (loads your site)
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 // contact form API
 app.post("/contact", (req, res) => {
-
-  const name = req.body.name;
-  const email = req.body.email;
-  const message = req.body.message;
+  const { name, email, message } = req.body;
 
   const sql = "INSERT INTO contacts (name, email, message) VALUES (?, ?, ?)";
 
   db.query(sql, [name, email, message], (err, result) => {
-
     if (err) {
       console.log("Insert error:");
       console.log(err);
@@ -60,15 +56,12 @@ app.post("/contact", (req, res) => {
     } else {
       res.send("Message sent successfully!");
     }
-
   });
-
 });
 
-// start server (always last)
+// start server (ALWAYS LAST)
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log("Server running on port " + PORT);
 });
-
