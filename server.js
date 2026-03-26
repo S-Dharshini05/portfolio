@@ -56,6 +56,12 @@ app.post("/contact", (req, res) => {
 
 // start server
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log("Server is running");
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log("Server running on port " + PORT);
 });
+app.get("/", (req, res) => {
+  res.send("My site is live 🚀");
+});
+
