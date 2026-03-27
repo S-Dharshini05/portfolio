@@ -14,8 +14,8 @@ app.use(bodyParser.json());
 // serve static files
 app.use(express.static(path.join(__dirname, "public")));
 
-// database connection
-const db = mysql.createConnection({
+// ✅ FIXED: Use connection pool instead of single connection
+const db = mysql.createPool({
   host: "gateway01.ap-southeast-1.prod.aws.tidbcloud.com",
   user: "2n4hg3hwfGkBTHv.root",
   password: "QmUqK9wW8ZUKt3Th",
@@ -24,16 +24,20 @@ const db = mysql.createConnection({
   ssl: {
     minVersion: "TLSv1.2",
     rejectUnauthorized: true
-  }
+  },
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
-// connect to database
-db.connect((err) => {
+// optional: test connection (safe)
+db.getConnection((err, connection) => {
   if (err) {
     console.log("Database connection failed:");
     console.log(err);
   } else {
     console.log("Connected to TiDB database");
+    connection.release();
   }
 });
 
@@ -60,3 +64,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log("Server running on port " + PORT);
 });
+
