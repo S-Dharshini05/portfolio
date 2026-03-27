@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require("express"); // ✅ ADD THIS
 const mysql = require("mysql2");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 // serve static files
 app.use(express.static(path.join(__dirname, "public")));
 
-// ✅ FIXED: Use connection pool instead of single connection
+// database connection pool
 const db = mysql.createPool({
   host: "gateway01.ap-southeast-1.prod.aws.tidbcloud.com",
   user: "2n4hg3hwfGkBTHv.root",
@@ -30,7 +30,7 @@ const db = mysql.createPool({
   queueLimit: 0
 });
 
-// optional: test connection (safe)
+// test connection
 db.getConnection((err, connection) => {
   if (err) {
     console.log("Database connection failed:");
@@ -39,6 +39,11 @@ db.getConnection((err, connection) => {
     console.log("Connected to TiDB database");
     connection.release();
   }
+});
+
+// test route (IMPORTANT)
+app.get("/", (req, res) => {
+  res.send("Server is running");
 });
 
 // contact form API
@@ -64,4 +69,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log("Server running on port " + PORT);
 });
-

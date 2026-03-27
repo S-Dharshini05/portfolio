@@ -9,17 +9,18 @@ document.getElementById("response").innerText = "Please fill all fields";
 return;
 }
 
-fetch("http://localhost:3000/contact", {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify({
-name: name,
-email: email,
-message: message
+fetch("https://portfolio-1-n8kd.onrender.com/contact", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    name: name,
+    email: email,
+    message: message
+  })
 })
-})
+
 
 .then(response => response.text())
 
