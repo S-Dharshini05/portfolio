@@ -11,7 +11,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// serve static files (VERY IMPORTANT)
+// serve static files
 app.use(express.static(path.join(__dirname, "public")));
 
 // database connection
@@ -37,11 +37,6 @@ db.connect((err) => {
   }
 });
 
-// root route (loads your site)
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
-
 // contact form API
 app.post("/contact", (req, res) => {
   const { name, email, message } = req.body;
@@ -59,7 +54,7 @@ app.post("/contact", (req, res) => {
   });
 });
 
-// start server (ALWAYS LAST)
+// start server
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
